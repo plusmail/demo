@@ -1,22 +1,18 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 import kroryi.demo.Service.EmployeeService;
 import kroryi.demo.Service.UserService;
-import kroryi.demo.domain.Employee;
 import kroryi.demo.domain.User;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller

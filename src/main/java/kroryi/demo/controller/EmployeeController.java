@@ -1,4 +1,4 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 import kroryi.demo.Service.EmployeeService;
 import kroryi.demo.domain.Employee;

@@ -1,4 +1,4 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 
 import lombok.extern.log4j.Log4j2;

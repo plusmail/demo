@@ -1,4 +1,4 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 import kroryi.demo.domain.Category;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.List;
 
 @Controller

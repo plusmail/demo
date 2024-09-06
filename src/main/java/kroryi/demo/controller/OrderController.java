@@ -1,4 +1,4 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 import kroryi.demo.Service.OrderService;
 import kroryi.demo.domain.Order;

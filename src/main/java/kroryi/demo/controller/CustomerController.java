@@ -1,9 +1,8 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 
 import kroryi.demo.Service.CustomerService;
 import kroryi.demo.domain.Customer;
-import kroryi.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

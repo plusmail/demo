@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Form Layout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body {
+        background-color: #f4f4f4;
+    }
+
+    .card {
+        background-color: #dce0c1;
+        border-radius: 5px;
+        width: 400px;
+        margin: 0 auto;
+    }
+
+    h5 {
+        color: #4b5320;
+    }
+</style>
+<body>
+<div class="container mt-5">
+    <div class="card p-4 bg-light">
+        <h5 class="card-title text-center">추가 정보</h5>
+        <form>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="내원유형" class="form-label">내원유형</label>
+                    <select class="form-select" id="내원유형">
+                        <option value="">선택</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="성향" class="form-label">성향</label>
+                    <select class="form-select" id="성향">
+                        <option value="">선택</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="고객분류" class="form-label">고객분류</label>
+                    <select class="form-select" id="고객분류">
+                        <option value="">고객구분1</option>
+                        <option value="">고객구분2</option>
+                        <option value="">고객구분3</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="상담구분" class="form-label">상담구분</label>
+                    <select class="form-select" id="상담구분">
+                        <option value="">선택</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="최초내원" class="form-label">최초내원</label>
+                    <input type="date" class="form-control" id="최초내원" value="2017-02-23">
+                </div>
+                <div class="col">
+                    <label for="내원시간" class="form-label">내원 시간</label>
+                    <input type="time" class="form-control" id="내원시간" value="10:35">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="최종내원" class="form-label">최종내원</label>
+                    <input type="text" class="form-control" id="최종내원">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

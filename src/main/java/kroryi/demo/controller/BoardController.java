@@ -1,4 +1,4 @@
-package kroryi.demo;
+package kroryi.demo.controller;
 
 import jakarta.validation.Valid;
 import kroryi.demo.Service.BoardService;
