@@ -3,6 +3,7 @@ package kroryi.demo.controller;
 import jakarta.validation.Valid;
 import kroryi.demo.Service.BoardService;
 import kroryi.demo.dto.BoardDTO;
+import kroryi.demo.dto.BoardListReplyCountDTO;
 import kroryi.demo.dto.PageRequestDTO;
 import kroryi.demo.dto.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,10 @@ public class BoardController {
         if (pageRequestDTO.getPage() < 1) {
             pageRequestDTO.setPage(1);  // 페이지 번호가 1보다 작은 경우 1로 설정
         }
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
+                boardService.listWithReplyCount(pageRequestDTO);
+
         log.info(responseDTO);
 
         model.addAttribute("responseDTO", responseDTO);

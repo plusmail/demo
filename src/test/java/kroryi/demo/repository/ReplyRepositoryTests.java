@@ -1,8 +1,10 @@
 package kroryi.demo.repository;
 
+import kroryi.demo.Service.ReplyService;
 import kroryi.demo.domain.Board;
 import kroryi.demo.domain.Reply;
 import kroryi.demo.dto.BoardListReplyCountDTO;
+import kroryi.demo.dto.ReplyDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,16 @@ public class ReplyRepositoryTests {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyService replyService;
+
     @Test
     public void testInsert(){
         Long bno = 408L;
         Board board = Board.builder().bno(bno).build();
         Reply reply = Reply.builder()
                 .board(board)
-                .replyText("첫 댓글......")
+                .replyText("333 댓글......")
                 .replyer("사용자111")
                 .build();
 
@@ -70,6 +75,20 @@ public class ReplyRepositoryTests {
         log.info("Prev {} : next {}",result.hasPrevious(), result.hasNext());
         result.getContent().forEach(board -> log.info(board.toString()));
 
+    }
+
+
+    @Test
+    public void testRegister(){
+        ReplyDTO replyDTO = ReplyDTO.builder()
+                .replyText("댓글....111")
+                .replyer("사용자 22")
+                .bno(408L)
+                .build();
+
+        Long rno = replyService.register(replyDTO);
+
+        log.info("replyService.register 등록성공--->{}", rno);
     }
 
 }
