@@ -42,6 +42,8 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = modelMapper.map(replyDTO, Reply.class);
         reply.setBoard(board);
 
+        //reply 객체에 Board.bno 번호가 없는 글을 가지고 있다면
+        //DataIntegrityViolationException 발생하면 CustomAdvice에 작성한 핸들러 동작해서 예외 문자를 클라이언트에 전송
         Long rno = replyRepository.save(reply).getRno();
         return rno;
     }
