@@ -25,7 +25,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @ApiOperation(value="Replise POST" ,notes="POST 방식으로 댓글 등록")
-    @PostMapping(value="", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Long> register(@Valid @RequestBody ReplyDTO replyDTO,
                                                      BindingResult bindingResult) throws BindException {
 
