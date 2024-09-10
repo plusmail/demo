@@ -1,6 +1,5 @@
 package kroryi.demo.Service;
 
-import kroryi.demo.domain.Reply;
 import kroryi.demo.dto.PageRequestDTO;
 import kroryi.demo.dto.PageResponseDTO;
 import kroryi.demo.dto.ReplyDTO;

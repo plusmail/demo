@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
