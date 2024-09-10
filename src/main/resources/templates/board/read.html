@@ -128,6 +128,27 @@
     registerModal.hide()
   }, false)
 
+  registerBtn.addEventListener("click", (e)=>{
+    const replyObj = {
+      bno:bno,
+      replyText:replyText.value,
+      replyer:replyer.value
+    }
+
+    addReply(replyObj).then(result =>{
+      console.log(result.rno)
+      registerModal.hide()
+      replyText.value=''
+      replyer.value=''
+      printReplies(page,size, false)
+
+    }).catch(e=>{
+      alert("예외 발생")
+    })
+
+
+  })
+
 
   const bno = [[${dto.bno}]]
 
