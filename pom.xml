@@ -121,6 +121,12 @@
 			<artifactId>swagger-annotations</artifactId>
 			<version>1.6.14</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.20</version>
+		</dependency>
 
 	</dependencies>
 
@@ -130,6 +136,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -137,6 +144,14 @@
 						</exclude>
 					</excludes>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>start</goal>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<!-- maven-compiler-plugin 설정 -->
 			<plugin>
@@ -184,6 +199,20 @@
 							<outputDirectory>target/generated-sources/java</outputDirectory>
 							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
