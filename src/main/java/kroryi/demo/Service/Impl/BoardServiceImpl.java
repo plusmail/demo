@@ -3,10 +3,7 @@ package kroryi.demo.Service.Impl;
 import jakarta.transaction.Transactional;
 import kroryi.demo.Service.BoardService;
 import kroryi.demo.domain.Board;
-import kroryi.demo.dto.BoardDTO;
-import kroryi.demo.dto.BoardListReplyCountDTO;
-import kroryi.demo.dto.PageRequestDTO;
-import kroryi.demo.dto.PageResponseDTO;
+import kroryi.demo.dto.*;
 import kroryi.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -140,6 +137,11 @@ public class BoardServiceImpl implements BoardService {
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+        return null;
     }
 
 }

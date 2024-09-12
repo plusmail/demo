@@ -1,9 +1,6 @@
 package kroryi.demo.Service;
 
-import kroryi.demo.dto.BoardDTO;
-import kroryi.demo.dto.BoardListReplyCountDTO;
-import kroryi.demo.dto.PageRequestDTO;
-import kroryi.demo.dto.PageResponseDTO;
+import kroryi.demo.dto.*;
 
 public interface BoardService {
 
@@ -17,4 +14,6 @@ public interface BoardService {
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
 }
