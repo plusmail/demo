@@ -2,6 +2,7 @@ package kroryi.demo.Service;
 
 import kroryi.demo.domain.Board;
 import kroryi.demo.dto.*;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,23 +24,29 @@ public interface BoardService {
 
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
 
-    default Board dtoToEntity(BoardDTO boardDTO) {
+    default Board dtoToEntity(BoardDTO boardDTO){
+
         Board board = Board.builder()
                 .bno(boardDTO.getBno())
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
                 .writer(boardDTO.getWriter())
+
                 .build();
 
-        if (boardDTO.getFileNames() != null) {
+        if(boardDTO.getFileNames() != null){
+            System.out.println("55555555->{}"+ boardDTO);
             boardDTO.getFileNames().forEach(fileName -> {
+                // /view/s_uuid_31231.jpg
                 String[] arr = fileName.split("_");
-                board.addImage(arr[0], arr[1]);
+                System.out.println("1111--->" + arr[0]);
+                System.out.println("1112--->" + arr[1]);
+                System.out.println("1113--->" + fileName);
+                board.addImage(arr[1], arr[2]);
             });
         }
         return board;
     }
-
     default BoardDTO entityToDTO(Board board) {
         BoardDTO boardDTO = BoardDTO.builder()
                 .bno(board.getBno())

@@ -37,7 +37,7 @@
 
                         <div class="my-4">
                             <div class="float-end">
-                                <button class="btn btn-primary" type="submit">등록</button>
+                                <button class="btn btn-primary submitBtn" type="submit">등록</button>
                                 <button class="btn btn-secondary" type="reset">취소</button>
                             </div>
                         </div>
@@ -108,5 +108,87 @@
         e.preventDefault()
         uploadModal.show()
     },false)
+
+    document.querySelector(".uploadBtn").addEventListener("click", e=>{
+        //빈 formObj객체를 생성
+        const formObj = new FormData();
+        // <input type="files">에 업로드 할 선택된 파일 정보 배열데이터
+        const fileInput = document.querySelector("input[name='files']")
+        console.log(fileInput.files);
+        const files = fileInput.files
+
+        // 선택된 파일 목록을 formObj에 추가
+        for(let i=0;i < files.length; i++){
+            formObj.append("files", files[i])
+        }
+
+        //upload.js에 있는 uploadToServer axios에 formObj전달
+        uploadToServer(formObj).then(result=>{
+            //then은 axios가 서버로 데이터 전송 후 성공 했을때 실행
+            // console.log(result)
+            // result는 Controller에서 데이터/이미지를 등록 후 응답 정보
+            for( const uploadResult of result){
+                showUploadFile(uploadResult)
+            }
+
+            uploadModal.hide()
+        }).catch(e=>{
+            //axios가 실패했을 경우 실행
+            uploadModal.hide()
+        })
+
+    },false)
+
+    const uploadResult = document.querySelector(".uploadResult")
+    function showUploadFile({uuid, fileName, link}) {
+        console.log(link)
+        const str = `<div class="card col-4">
+        <div class="card-header d-flex justify-content-center">
+        ${fileName}
+        <button class="btn-sm btn-danger"
+        onclick="javascript:removeFile('${uuid}', '${fileName}', this)">X</button>
+            </div>
+
+        <div class="card-body">
+        <img src="/view/${link}" data-src="${uuid+"_"+fileName}">
+        </div>
+        </div>
+
+        `
+        uploadResult.innerHTML += str
+
+    }
+
+    function removeFile(uuid,fileName, obj){
+        console.log(uuid)
+        console.log(fileName)
+        console.log(obj)
+        const targetDiv = obj.closest(".card")
+        removeFileToServer(uuid,fileName).then(data=>{
+            targetDiv.remove()
+        })
+    }
+
+    document.querySelector(".submitBtn").addEventListener("click", e=>{
+        e.preventDefault()
+        e.stopPropagation()
+        const target = document.querySelector(".uploadHidden")
+        const uploadFiles = uploadResult.querySelectorAll("img")
+
+        let str = ''
+        for(let i=0; i< uploadFiles.length;i++){
+            const uploadFile = uploadFiles[i]
+            const imgLink = uploadFile.getAttribute("src")
+            str +=`<input type='hidden' name='fileNames' value="${imgLink}">`
+        }
+
+        target.innerHTML = str;
+
+        const formObj = document.querySelector("form")
+        formObj.submit();
+        formObj.reset()
+    })
+
+
 
 </script>

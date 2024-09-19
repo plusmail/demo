@@ -72,6 +72,8 @@ public class UpDownController {
 
             });
 
+            log.info("11111->{}",list);
+
             return list;
         }
 

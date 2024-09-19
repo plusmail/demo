@@ -33,7 +33,9 @@ public class BoardServiceImpl implements BoardService {
     public Long register(BoardDTO dto) {
 
 //        Board board = modelMapper.map(dto, Board.class);
+        log.info("regist2222->{}", dto);
         Board board = dtoToEntity(dto);
+        log.info("regist33333->{}", board);
         return boardRepository.save(board).getBno();
     }
 
