@@ -4,6 +4,8 @@ import kroryi.demo.domain.Board;
 import kroryi.demo.dto.*;
 import lombok.extern.log4j.Log4j2;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,12 +39,16 @@ public interface BoardService {
         if(boardDTO.getFileNames() != null){
             System.out.println("55555555->{}"+ boardDTO);
             boardDTO.getFileNames().forEach(fileName -> {
-                // /view/s_uuid_31231.jpg
-                String[] arr = fileName.split("_");
-                System.out.println("1111--->" + arr[0]);
-                System.out.println("1112--->" + arr[1]);
-                System.out.println("1113--->" + fileName);
-                board.addImage(arr[1], arr[2]);
+                try {
+                    // UUID와 파일명을 저장할 때 URL 인코딩 처리
+                    String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+                    String[] arr = encodedFileName.split("_", 3);  // 앞부분 UUID, 뒷부분 파일명으로 분리
+                    System.out.println("2222222222222--->" + arr[0] +":" + arr[1] +":" + arr[2]);
+
+                    board.addImage(arr[1], arr[2]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         }
         return board;
