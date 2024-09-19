@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link kroryi.demo.domain.Board}
@@ -29,4 +30,6 @@ public class BoardDTO implements Serializable {
     @NotEmpty
     private String writer;
     private String address;
+
+    private List<String> fileNames;
 }

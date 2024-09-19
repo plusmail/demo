@@ -25,6 +25,16 @@
                             <span class="input-group-text">작성자 :</span>
                             <input type="text" class="form-control" name="writer" placeholder="작성자를 입력하세요.">
                         </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">이미지:</span>
+                            <div class="float-end uploadHidden">
+                                <button type="button" class="btn btn-primary uploadFileBtn">
+                                    파일추가
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="my-4">
                             <div class="float-end">
                                 <button class="btn btn-primary" type="submit">등록</button>
@@ -39,9 +49,46 @@
             </div>
         </div>
     </div>
+
+<!--    첨부파일 섬네일 보이는곳-->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap:wrap">
+            </div>
+        </div>
+    </div>
+
+<!--    첨무파일 추가 모달창-->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">업로드 파일</h5>
+                    <button class="btn-close" type="button"
+                            data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary uploadBtn" type="button">
+                        업로드
+                    </button>
+                    <button class="btn btn-outline-dark closeUploadBtn" type="button">
+                        닫기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/upload.js"></script>
+
 </div>
-
-
 
 <script layout:fragment="script" th:inline="javascript">
     const errors = [[${errors}]]
@@ -53,5 +100,13 @@
         }
         alert(errorMsg)
     }
+
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    document.querySelector(".uploadFileBtn").addEventListener("click", e=>{
+        console.log("11111111111111111")
+        e.stopPropagation()
+        e.preventDefault()
+        uploadModal.show()
+    },false)
 
 </script>
