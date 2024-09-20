@@ -2,10 +2,7 @@ package kroryi.demo.controller;
 
 import jakarta.validation.Valid;
 import kroryi.demo.Service.BoardService;
-import kroryi.demo.dto.BoardDTO;
-import kroryi.demo.dto.BoardListReplyCountDTO;
-import kroryi.demo.dto.PageRequestDTO;
-import kroryi.demo.dto.PageResponseDTO;
+import kroryi.demo.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -27,11 +24,15 @@ public class BoardController {
     @GetMapping("/list")
     public String list(PageRequestDTO pageRequestDTO, Model model) {
         if (pageRequestDTO.getPage() < 1) {
-            pageRequestDTO.setPage(1);  // 페이지 번호가 1보다 작은 경우 1로 설정
+            pageRequestDTO.setPage(1);
+// 페이지 번호가 1보다 작은 경우 1로 설정
         }
-//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
-                boardService.listWithReplyCount(pageRequestDTO);
+// PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
+//                boardService.listWithReplyCount(pageRequestDTO);
+        //Board Reply BoardImage 3가지 포함된 것
+        PageResponseDTO<BoardListAllDTO> responseDTO =
+                boardService.listWithAll(pageRequestDTO);
 
         log.info(responseDTO);
 
