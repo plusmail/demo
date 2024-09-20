@@ -211,6 +211,14 @@ public class BoardSearchImpl extends
                 }
             }
         }
+        // select * from board
+        JPQLQuery<Board> boardJPQLQuery = from(board);
+
+        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board));
+        boardJPQLQuery.where(booleanBuilder);
+        boardJPQLQuery.groupBy(board);
+        getQuerydsl().applyPagination(pageable,boardJPQLQuery);
+
 
         List<Tuple> tupleList =
                 getQuerydsl()
@@ -247,7 +255,8 @@ public class BoardSearchImpl extends
             return dto;
         }).collect(Collectors.toList());
 
-        long totalCount = tupleList.size();
+        long totalCount = boardJPQLQuery.fetchCount();
+        log.info("totalCount->{}", totalCount);
 
         return new PageImpl<>(dtoList, pageable, totalCount);
     }

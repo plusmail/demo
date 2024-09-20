@@ -39,7 +39,7 @@ public class Board extends BaseEntity{
             // BoardImage에 있는 데이터를 자동으로 삭제된다.
     )
     @Builder.Default
-    @BatchSize(size = 10) // where 조건에 in(?,? ...) 사용 where a= ? or a= ? 같은 것
+    @BatchSize(size = 40) // where 조건에 in(?,? ...) 사용 where a= ? or a= ? 같은 것
     @ToString.Exclude
     private Set<BoardImage> imageSet= new HashSet<>();
 

@@ -46,6 +46,14 @@
 
 
                 </div>
+                <div class="col">
+                    <div class="card" style="width:200px"
+                         th:if="${dto.fileNames !=null && dto.fileNames.size() > 0 }">
+                        <img th:each="fileName:${dto.fileNames}"
+                             th:src="|/view/${fileName}|" alt="" class="card-img-top">
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

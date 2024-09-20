@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface BoardService {
@@ -42,15 +44,22 @@ public interface BoardService {
                 try {
                     // UUID와 파일명을 저장할 때 URL 인코딩 처리
                     String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-                    String[] arr = encodedFileName.split("_", 3);
-                    // 앞부분 UUID, 뒷부분 파일명으로 분리
-                    //  /view/s_00834d8d-1e9d-4fbf-9cf4-1584b44c18f9_test_01_992.jpg
-//                    System.out.println("2222222222222--->" + arr[0] +":" + arr[1] +":" + arr[2]);
-                    board.addImage(arr[1], arr[2]);
-//디비에 저장될때는 한글이 인코딩되어서 저장.
-// 다시 꺼낼대는 디코딩 해서 사용
-//                    String decoded = URLDecoder.decode(arr[2], StandardCharsets.UTF_8.toString());
-//                    System.out.println("Decoded: " + decoded);
+
+                    // 정규식으로 UUID 다음의 파일명을 추출
+                    Pattern pattern = Pattern.compile("s_([0-9a-fA-F\\-]+)_(.+)"); // UUID와 파일명을 분리하는 정규식
+                    Matcher matcher = pattern.matcher(encodedFileName);
+
+                    if (matcher.find()) {
+                        String uuid = matcher.group(1);    // UUID 부분
+                        String originalFileName = URLDecoder.decode(matcher.group(2), StandardCharsets.UTF_8.toString());  // 파일명 부분
+                        System.out.println("UUID: " + uuid);
+                        System.out.println("Original File Name: " + originalFileName);
+
+                        board.addImage(uuid, originalFileName);
+                    } else {
+                        System.out.println("파일명 패턴이 일치하지 않습니다: " + fileName);
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

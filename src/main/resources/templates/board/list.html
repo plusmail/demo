@@ -69,6 +69,10 @@
                             </tbody>
                         </table>
 
+                        <a th:href="|@{/board/register}|" class="text-decoration-none">
+                            <button type="button" class="btn btn-primary">글등록</button>
+                        </a>
+
                         <div class="float-end">
                             <ul class="pagination flex-wrap">
                                 <li class="page-item" th:if="${responseDTO.prev}">

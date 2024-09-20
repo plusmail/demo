@@ -14,8 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,16 +70,39 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void modify(BoardDTO dto) {
+
+        log.info("modify- dto {}", dto);
         Optional<Board> result = boardRepository.findById(dto.getBno());
         Board board = result.orElseThrow();
         board.change(dto.getTitle(), dto.getContent());
         board.clearImages();
 
         if(dto.getFileNames() != null){
-            for (String fileName : dto.getFileNames()) {
-                String[] arr = fileName.split("_");
-                board.addImage(arr[0], arr[1]);
-            }
+            dto.getFileNames().forEach(fileName -> {
+                try {
+                    // UUID와 파일명을 저장할 때 URL 인코딩 처리
+                    String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+
+                    // 정규식으로 UUID 다음의 파일명을 추출
+                    Pattern pattern = Pattern.compile("([0-9a-fA-F\\-]+)_(.+)"); // UUID와 파일명을 분리하는 정규식
+                    Matcher matcher = pattern.matcher(encodedFileName);
+
+                    if (matcher.find()) {
+                        String uuid = matcher.group(1);    // UUID 부분
+                        String originalFileName = URLDecoder.decode(matcher.group(2), StandardCharsets.UTF_8.toString());  // 파일명 부분
+                        System.out.println("UUID: " + uuid);
+                        System.out.println("Original File Name: " + originalFileName);
+
+                        board.addImage(uuid, originalFileName);
+                    } else {
+                        System.out.println("파일명 패턴이 일치하지 않습니다: " + fileName);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
         boardRepository.saveAndFlush(board);
         //영속성 영역의 콘텐트내용을 DB와 동기화 하는 명령
@@ -160,6 +188,9 @@ public class BoardServiceImpl implements BoardService {
         Pageable pageable = pageRequestDTO.getPageable("bno");
 
         Page<BoardListAllDTO> result = boardRepository.searchWithAll(types,keyword,pageable);
+
+        log.info("listWithAll-> {}", result);
+        log.info("listWithAll Page-> {}", pageable);
 
         return PageResponseDTO.<BoardListAllDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
