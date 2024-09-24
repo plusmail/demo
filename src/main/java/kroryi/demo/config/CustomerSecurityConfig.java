@@ -1,12 +1,17 @@
 package kroryi.demo.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kroryi.demo.security.Custom403Handler;
+import kroryi.demo.security.CustomErrorHandlerConfig;
 import kroryi.demo.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,10 +20,13 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
+
+import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -32,6 +40,8 @@ public class CustomerSecurityConfig {
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomErrorHandlerConfig.HandlerExceptionResolver customErrorHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,11 +70,31 @@ public class CustomerSecurityConfig {
                         .loginPage("/member/login") // 로그인 페이지로 이동
                         .permitAll()  // 모든 사용자에 로그인 페이지 접근 허용
                 )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler(accessDeniedHandler()))
                 .logout(LogoutConfigurer::permitAll
                 );
         // 6.1 바뀐 부분 기존에는 http.formLogin()
         return http.build();
     }
+
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler(){
+//        return new Custom403Handler();
+//    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return (request, response, accessDeniedException) -> {
+            ResponseEntity<Map<String,String>> responseEntity =
+                    customErrorHandler.handle403(accessDeniedException);
+            response.setStatus(responseEntity.getStatusCodeValue());
+            response.setContentType("application/json");
+            response.getWriter().write(new ObjectMapper()
+                    .writeValueAsString(responseEntity.getBody()));
+        };
+    }
+
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {

@@ -98,6 +98,7 @@ public class BoardController {
         return "board/modify";
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(@Valid BoardDTO boardDTO,
                          PageRequestDTO pageRequestDTO,
@@ -117,11 +118,11 @@ public class BoardController {
         redirectAttributes.addFlashAttribute("result", "수정됨");
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
 
-
         // /board/read?bno=xxxx
         return "redirect:/board/read";
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes){
         Long bno = boardDTO.getBno();
