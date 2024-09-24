@@ -57,14 +57,16 @@ public class CustomerSecurityConfig {
                 // .csrf().disable() 2버전 방식
                 // .csrf( c -> c.disable()) 3 버전 방식
                 .csrf(csrf -> csrf.disable())
-                .rememberMe(me->me
+                .rememberMe(me -> me
                         .key("12345678")
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(userDetailsService)
-                        .tokenValiditySeconds(60*60*24*30)
+                        .tokenValiditySeconds(60 * 60 * 24 * 30)
                 )
                 .authorizeHttpRequests(
-                        authorize -> authorize.anyRequest().authenticated()
+                        authorize -> authorize
+                                .requestMatchers("/member/login","/member/join").permitAll()
+                                .anyRequest().authenticated()
                 ) // 모든 요청에 대한 인증 필요
                 .formLogin(form -> form
                         .loginPage("/member/login") // 로그인 페이지로 이동
@@ -84,9 +86,9 @@ public class CustomerSecurityConfig {
 //    }
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
+    public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
-            ResponseEntity<Map<String,String>> responseEntity =
+            ResponseEntity<Map<String, String>> responseEntity =
                     customErrorHandler.handle403(accessDeniedException);
             response.setStatus(responseEntity.getStatusCodeValue());
             response.setContentType("application/json");

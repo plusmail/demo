@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Member Join Page</title>
+</head>
+
+<div layout:fragment="content">
+    <style>
+        .fixed-width {
+            display: inline-block; /* 인라인 블록으로 변경 */
+            width: 100px;          /* 고정된 넓이 설정 */
+            background-color: #f0f0f0;
+            text-align: center;     /* 텍스트를 중앙 정렬 */
+        }
+    </style>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-center fs-3">
+                    회원가입
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" action="/member/join" method="post">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text d-inline-block fixed-width">아이디 : </span>
+                            <input type="text" name="mid" class="form-control">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text d-inline-block fixed-width">비밀번호 :</span>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text d-inline-block fixed-width">성명 : </span>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text d-inline-block fixed-width">E-mail</span>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!--end card body-->
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+
+
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const error = [[${error}]]
+
+    if(error && error === 'mid'){
+        alert("동일한 MID를 가진 계정이 존재합니다.")
+    }
+
+
+</script>
