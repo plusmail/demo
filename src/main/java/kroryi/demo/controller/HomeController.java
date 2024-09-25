@@ -25,6 +25,12 @@ public class HomeController {
     @Autowired
     UserService userService;
 
+    @GetMapping("")
+    public String home() {
+
+        return "redirect:/board/list";
+    }
+
     @GetMapping("/userfindall")
     public String userfindall(Model model) {
 
@@ -37,12 +43,7 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/home")
-    public String home() {
 
-
-        return "home";
-    }
 
     @GetMapping("/user")
     public String userUpdate() {

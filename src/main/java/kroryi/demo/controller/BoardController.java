@@ -51,8 +51,8 @@ public class BoardController {
 
         return "board/list";
     }
-
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")  // 로그인 인가된 모든 사용자
+//    @PreAuthorize("hasAnyRole('EMP','ADMIN','MANAGER')") 이 설정은 or EMP나 ADMIN 중 하나이면 허가
     @GetMapping("/register")
     public String register(Model model) {
 
