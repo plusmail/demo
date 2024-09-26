@@ -1,6 +1,5 @@
 package kroryi.demo.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import kroryi.demo.domain.Member;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

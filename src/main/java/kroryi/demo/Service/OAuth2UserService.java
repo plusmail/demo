@@ -43,6 +43,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         // DB 저장로직이 필요하면 추가
+        // 닉네임 프로파일 이메일
         Member member = saveOrUpdate(attributes);
 
         return new DefaultOAuth2User(
@@ -53,6 +54,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private Member saveOrUpdate(Map<String, Object> attributes) {
+        System.out.println("kakao-------->" + attributes);
+
+
         KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
         Member member = memberRepository.findByEmail(kakaoUserInfo.getEmail())
                 .map(entity -> entity.update(kakaoUserInfo.getEmail(),kakaoUserInfo.getNickname(), kakaoUserInfo.getProfileImage()))

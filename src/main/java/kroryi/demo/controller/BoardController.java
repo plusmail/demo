@@ -98,7 +98,12 @@ public class BoardController {
         return "board/modify";
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+
+    @PreAuthorize("((principal instanceof T(org.springframework.security.core.userdetails.UserDetails) " +
+            "and principal.username == #boardDTO.writer) " +
+            "or (principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) " +
+            "and principal.attributes['kakao_account']['email'] == #boardDTO.writer))")
+//    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(@Valid BoardDTO boardDTO,
                          PageRequestDTO pageRequestDTO,

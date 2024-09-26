@@ -44,7 +44,6 @@ public class CustomerSecurityConfig {
     private final CustomerUserDetailsService userDetailsService;
     private final OAuth2UserService oAuth2UserService;
 
-
     @Autowired
     private CustomErrorHandlerConfig.HandlerExceptionResolver customErrorHandler;
 
@@ -74,6 +73,7 @@ public class CustomerSecurityConfig {
 //                                .anyRequest().authenticated() // 모든 사이트 다 막고 시작
                                 .anyRequest().permitAll() // 모든 사이트 다 막고 시작
                 ) // 모든 요청에 대한 인증 필요
+//                .anonymous( any->any.principal("손님").authorities("ROLE_EMP"))
                 .formLogin(form -> form
                         .loginPage("/member/login") // 로그인 페이지로 이동
                         .defaultSuccessUrl("/board/list", true) // 이것을 생략하면 http://localhost:8080/
@@ -117,18 +117,17 @@ public class CustomerSecurityConfig {
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
             String id = defaultOAuth2User.getAttributes().get("id").toString();
-            String body = """
-                    {"id":"%s"}
-                    """.formatted(id);
-
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-            PrintWriter writer = response.getWriter();
-            writer.println(body);
-            writer.flush();
+            response.sendRedirect("/");
+
+//            PrintWriter writer = response.getWriter();
+//            writer.println(body);
+//            writer.flush();
         });
     }
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
 

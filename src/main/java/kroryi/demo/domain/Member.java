@@ -26,7 +26,7 @@ public class Member extends BaseEntity{
     private String nickname;
     private String profileImage;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
 
@@ -37,9 +37,6 @@ public class Member extends BaseEntity{
             this.mid = UUID.randomUUID().toString();
         }
     }
-
-
-
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }

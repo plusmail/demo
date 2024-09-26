@@ -33,6 +33,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
                 member.getMid(),
                 member.getPassword(),
                 member.getEmail(),
+                member.getNickname(),
+                member.getProfileImage(),
                 false,
                 member.getSocial(),
                 member.getRoleSet().stream().map(memberRole ->
@@ -40,7 +42,6 @@ public class CustomerUserDetailsService implements UserDetailsService {
                         .collect(Collectors.toList())
         );
         log.info("memberSecurityDTO-->{}", memberSecurityDTO );
-
 
         return memberSecurityDTO;
     }

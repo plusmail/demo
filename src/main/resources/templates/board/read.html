@@ -58,18 +58,31 @@
         </div>
     </div>
 
-    <div class="my-4" th:with="user=${#authentication.principal}">
+    <div class="my-4"
+         th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}"
+         th:with="email=${#authentication.principal.attributes['kakao_account']['email']}">
         <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
             <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
                 <button type="button" class="btn btn-primary">목록보기</button>
             </a>
-
+            <a th:if="${email !=null && email == dto.getWriter()}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                <button type="button" class="btn btn-secondary">수정하기</button>
+            </a>
+        </div>
+    </div>
+    <div class="my-4"
+         th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+         th:with="user=${#authentication.principal}">
+        <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
+            <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
+                <button type="button" class="btn btn-primary">목록보기</button>
+            </a>
             <a th:if="${user !=null && user.username == dto.writer}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
                 <button type="button" class="btn btn-secondary">수정하기</button>
             </a>
-
         </div>
     </div>
+
     <!--  댓글영역    시작-->
     <div class="row mt-3">
         <div class="col-md-12">
@@ -102,12 +115,18 @@
                         <span class="input-group-text">댓글 내용</span>
                         <input type="text" class="form-control replyText">
                     </div>
-                    <div class="input-group mb-3"
-                             th:with="user=${#authentication.principal}">
-                        <span class="input-group-text">작성자</span>
-                        <input type="text" class="form-control replyer"
-                        th:value="${user.username}" readonly>
-                    </div>
+                    <!-- 카카오 사용자일 경우 (OAuth2User) -->
+                    <input type="text" class="form-control replyer" name="replyer"
+                           th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}"
+                               th:value="${#authentication.principal.attributes['kakao_account']['email']}"
+                           readonly>
+
+                    <!-- 로컬 사용자일 경우 (UserDetails) -->
+                    <input type="text" class="form-control replyer"  name="replyer"
+                           th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+                           th:value="${#authentication.principal.username}"
+                           readonly>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary registerBtn">등록</button>
@@ -147,11 +166,18 @@
 
 
     <script src="/js/reply.js"></script>
+
+<!--    <script th:inline="javascript">-->
+<!--        /* OAuth2User는 'username' 필드가 없기 때문에, attributes에서 email을 가져오고, 로컬 사용자(UserDetails)일 경우 username을 사용 */-->
+<!--        let currentUser = /*[[${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) ? '"' + #authentication.principal.attributes['kakao_account']['email'] + '"' : '"' + #authentication.principal.username + '"'}]]*/ 'Anonymous';-->
+
+<!--        console.log(currentUser);-->
+<!--    </script>-->
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
-    const currentUser = [[${#authentication.principal.username}]]
+    let currentUser = /*[[${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) ? '"' + #authentication.principal.attributes['kakao_account']['email'] + '"' : '"' + #authentication.principal.username + '"'}]]*/ 'Anonymous';
 
     let hasAuth = false
 
@@ -226,6 +252,8 @@
 
 
     document.querySelector(".addReplyBtn").addEventListener("click", (e) => {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaa")
+
         registerModal.show()
     }, false)
 

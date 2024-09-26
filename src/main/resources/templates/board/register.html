@@ -21,12 +21,17 @@
                             <span class="input-group-text">내용 :</span>
                             <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
                         </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">작성자 :</span>
-                            <input type="text" class="form-control"
-                                   name="writer"
-                                   th:value="${#authentication.principal.username}" readonly>
-                        </div>
+                        <!-- 카카오 사용자일 경우 (OAuth2User) -->
+                        <input type="text" class="form-control" name="writer"
+                               th:if="${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)}"
+                               th:value="${#authentication.principal.attributes['kakao_account']['email']}"
+                               readonly>
+
+                        <!-- 로컬 사용자일 경우 (UserDetails) -->
+                        <input type="text" class="form-control" name="writer"
+                               th:if="${#authentication.principal instanceof T(org.springframework.security.core.userdetails.UserDetails)}"
+                               th:value="${#authentication.principal.username}"
+                               readonly>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">이미지:</span>
