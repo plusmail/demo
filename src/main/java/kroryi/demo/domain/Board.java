@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -42,6 +44,9 @@ public class Board extends BaseEntity{
     @BatchSize(size = 40) // where 조건에 in(?,? ...) 사용 where a= ? or a= ? 같은 것
     @ToString.Exclude
     private Set<BoardImage> imageSet= new HashSet<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Reply> replies = new ArrayList<>();
 
 //    Hibernate:
 //    select

@@ -167,20 +167,13 @@
 
     <script src="/js/reply.js"></script>
 
-<!--    <script th:inline="javascript">-->
-<!--        /* OAuth2User는 'username' 필드가 없기 때문에, attributes에서 email을 가져오고, 로컬 사용자(UserDetails)일 경우 username을 사용 */-->
-<!--        let currentUser = /*[[${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) ? '"' + #authentication.principal.attributes['kakao_account']['email'] + '"' : '"' + #authentication.principal.username + '"'}]]*/ 'Anonymous';-->
-
-<!--        console.log(currentUser);-->
-<!--    </script>-->
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
-    let currentUser = /*[[${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) ? '"' + #authentication.principal.attributes['kakao_account']['email'] + '"' : '"' + #authentication.principal.username + '"'}]]*/ 'Anonymous';
+    let currentUser = /*[[${#authentication.principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User) ? #authentication.principal.attributes['kakao_account']['email'] : #authentication.principal.username}]]*/ 'Anonymous';
 
     let hasAuth = false
-
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -294,7 +287,9 @@
             return;
         }
         getReply(rno).then(reply => {
-            console.log(reply)
+            console.log(reply.replyer)
+            console.log("currentuser->"+ currentUser)
+
             replyHeader.innerHTML = reply.rno
             modifyText.value = reply.replyText
             modifyModal.show()

@@ -182,7 +182,8 @@
 
         axios.post(`/board/modify?${link}`, formObj)
             .then((response)=>{
-                console.log("성공 : {}"+response.data)
+                // console.log("성공 : {}"+response.data)
+                location.href = `/board/read?bno=[[${dto.bno}]]&${link}`
             })
             .catch((error)=>{
                 if(error.response){

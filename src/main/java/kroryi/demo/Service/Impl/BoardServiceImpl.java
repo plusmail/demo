@@ -111,6 +111,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void remove(Long id) {
+
+        //아래는 댓글도 지우는 것
+//        boardRepository.deleteReplyByBoardId(id);
+        //댓글은 않지우는 것
         boardRepository.deleteById(id);
     }
 
