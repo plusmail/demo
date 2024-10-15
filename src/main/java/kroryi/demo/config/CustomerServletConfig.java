@@ -22,9 +22,13 @@ public class CustomerServletConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/assets/");
+        registry.addResourceHandler("/file/**")
+                .addResourceLocations("classpath:/static/file/");
     }
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/api/api-docs").allowedOrigins("*");
 //    }
+
+
 }

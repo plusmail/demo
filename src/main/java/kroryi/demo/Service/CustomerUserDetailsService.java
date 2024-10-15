@@ -41,7 +41,8 @@ public class CustomerUserDetailsService implements UserDetailsService {
                                 new SimpleGrantedAuthority("ROLE_" + memberRole.name()))
                         .collect(Collectors.toList())
         );
-        log.info("memberSecurityDTO-->{}", memberSecurityDTO );
+        log.info("memberSecurityDTO-->{}", memberSecurityDTO.getUsername() );
+        log.info("memberSecurityDTO-->{}", memberSecurityDTO.getPassword() );
 
         return memberSecurityDTO;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kroryi.demo.Service.CustomerUserDetailsService;
 import kroryi.demo.Service.OAuth2UserService;
 import kroryi.demo.security.CustomErrorHandlerConfig;
+import kroryi.demo.security.filter.APILoginFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +27,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -56,10 +60,23 @@ public class CustomerSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("----------보안 환경 설정");
-        // Spring boot 3부터 람다식으로 사용해야 함.
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+
+        AuthenticationManager authenticationManager =
+                authenticationManagerBuilder.build();
+
+        http.authenticationManager(authenticationManager);
+
+        APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
+        apiLoginFilter.setAuthenticationManager(authenticationManager);
+
+        http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+
         http
-                // .csrf().disable() 2버전 방식
-                // .csrf( c -> c.disable()) 3 버전 방식
                 .csrf(csrf -> csrf.disable())
                 .rememberMe(me -> me
                         .key("12345678")
@@ -69,17 +86,17 @@ public class CustomerSecurityConfig {
                 )
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/member/login","/member/join").permitAll() //permitAll 모든 접근 허요
-//                                .anyRequest().authenticated() // 모든 사이트 다 막고 시작
-                                .anyRequest().permitAll() // 모든 사이트 다 막고 시작
+                                .requestMatchers("/error","/generateToken","/file/**", "/member/login", "/member/join", "/swagger-ui.html", "/v3/api-docs/**", "/api/**", "/swagger-ui/**").permitAll() //permitAll 모든 접근 허요
+                                .anyRequest().authenticated() // 모든 사이트 다 막고 시작
+
+//                                .anyRequest().permitAll() // 모든 사이트 다 막고 시작
                 ) // 모든 요청에 대한 인증 필요
-//                .anonymous( any->any.principal("손님").authorities("ROLE_EMP"))
                 .formLogin(form -> form
                         .loginPage("/member/login") // 로그인 페이지로 이동
                         .defaultSuccessUrl("/board/list", true) // 이것을 생략하면 http://localhost:8080/
                         .permitAll()  // 모든 사용자에 로그인 페이지 접근 허용
                 )
-                .oauth2Login(login->login
+                .oauth2Login(login -> login
                         .loginPage("/member/login")
                         .successHandler(successHandler())
                         .userInfoEndpoint()
