@@ -4,8 +4,11 @@ package kroryi.demo.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kroryi.demo.Service.CustomerUserDetailsService;
 import kroryi.demo.Service.OAuth2UserService;
+import kroryi.demo.security.APILoginSuccessHandler;
 import kroryi.demo.security.CustomErrorHandlerConfig;
 import kroryi.demo.security.filter.APILoginFilter;
+import kroryi.demo.security.filter.TokenCheckFilter;
+import kroryi.demo.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +50,13 @@ public class CustomerSecurityConfig {
     private final DataSource dataSource;
     private final CustomerUserDetailsService userDetailsService;
     private final OAuth2UserService oAuth2UserService;
+    private final JWTUtil jwtUtil;
 
     @Autowired
     private CustomErrorHandlerConfig.HandlerExceptionResolver customErrorHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
@@ -74,7 +77,14 @@ public class CustomerSecurityConfig {
         APILoginFilter apiLoginFilter = new APILoginFilter("/generateToken");
         apiLoginFilter.setAuthenticationManager(authenticationManager);
 
+        APILoginSuccessHandler successHandler = new APILoginSuccessHandler(jwtUtil);
+        apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
+
+
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(
+                tokenCheckFilter(jwtUtil)
+                , UsernamePasswordAuthenticationFilter.class);
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -86,7 +96,7 @@ public class CustomerSecurityConfig {
                 )
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/error","/generateToken","/file/**", "/member/login", "/member/join", "/swagger-ui.html", "/v3/api-docs/**", "/api/**", "/swagger-ui/**").permitAll() //permitAll 모든 접근 허요
+                                .requestMatchers("/error","/generateToken","/file/**", "/member/login", "/member/join", "/swagger-ui.html", "/api-docs/**", "/api/**", "/swagger-ui/**").permitAll() //permitAll 모든 접근 허요
                                 .anyRequest().authenticated() // 모든 사이트 다 막고 시작
 
 //                                .anyRequest().permitAll() // 모든 사이트 다 막고 시작
@@ -165,5 +175,8 @@ public class CustomerSecurityConfig {
                 );
     }
 
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil){
+        return new TokenCheckFilter(jwtUtil);
+    }
 
 }
