@@ -7,6 +7,7 @@ import kroryi.demo.Service.OAuth2UserService;
 import kroryi.demo.security.APILoginSuccessHandler;
 import kroryi.demo.security.CustomErrorHandlerConfig;
 import kroryi.demo.security.filter.APILoginFilter;
+import kroryi.demo.security.filter.RefreshTokenFilter;
 import kroryi.demo.security.filter.TokenCheckFilter;
 import kroryi.demo.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,11 @@ public class CustomerSecurityConfig {
         http.addFilterBefore(
                 tokenCheckFilter(jwtUtil)
                 , UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(
+                new RefreshTokenFilter("/refreshToken", jwtUtil)
+                , TokenCheckFilter.class
+        );
 
         http
                 .csrf(csrf -> csrf.disable())

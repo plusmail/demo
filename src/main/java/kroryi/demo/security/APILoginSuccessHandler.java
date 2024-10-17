@@ -29,7 +29,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
         Map<String,Object> claim = Map.of("mid", authentication.getName());
         String accessToken = jwtUtil.generateToken(claim, 1);
-        String refreshToken = jwtUtil.generateToken(claim, 30);
+        String refreshToken = jwtUtil.generateToken(claim, 2);
 
         Gson gson = new Gson();
         Map<String, String> keyMap = Map.of(
